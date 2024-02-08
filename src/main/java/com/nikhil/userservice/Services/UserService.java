@@ -4,9 +4,12 @@ import com.nikhil.userservice.Models.Token;
 import com.nikhil.userservice.Models.User;
 import com.nikhil.userservice.Repo.TokenRepository;
 import com.nikhil.userservice.Repo.UserRepository;
+import lombok.NonNull;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -71,5 +74,15 @@ public class UserService {
         Token token1=tokenOptional.get();
         token1.setDeleted(true);
         tokenRepository.save(token1);
+    }
+
+    public User validateUser(String token){
+        Optional<Token> tokenOptional=tokenRepository.findByValueAndDeletedEqualsAndExpiryAtGreaterThan(token,false,new Date());
+        if(tokenOptional.isEmpty()){
+            //throw token not found exception
+            return null;
+        }
+        Token token1=tokenOptional.get();
+        return token1.getUser();
     }
 }

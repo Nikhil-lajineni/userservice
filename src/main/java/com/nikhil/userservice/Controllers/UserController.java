@@ -8,12 +8,10 @@ import com.nikhil.userservice.DTO.UserDto;
 import com.nikhil.userservice.Models.Token;
 import com.nikhil.userservice.Models.User;
 import com.nikhil.userservice.Services.UserService;
+import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -56,5 +54,9 @@ public class UserController {
         userService.logout(request.getToken());
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping(value = "/validate/{token}")
+    public User validateUser(@PathVariable @NonNull String token){
+        return userService.validateUser(token);
     }
 }
